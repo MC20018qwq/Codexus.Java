@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>滑块验证码</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #verification-container {
+            position: relative;
+            width: 544px;
+            height: 306px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        #verification-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+        }
+        #slider {
+            position: absolute;
+            width: 116px;
+            height: 100%; 
+            background-size: cover;
+            cursor: pointer;
+            left: 0; 
+            top: 0; 
+        }
+    </style>
+</head>
+<body>
+
+    <div id="verification-container">
+        <div id="verification-image"></div>
+        <div id="slider"></div>
+    </div>
+    <p>滑动距离: <span id="distance">0</span> 像素</p>
+
+    <script>
+        const slider = document.getElementById('slider');
+        const distanceDisplay = document.getElementById('distance');
+        const verificationImageDiv = document.getElementById('verification-image');
+        let isDragging = false;
+        let startX = 0;
+        let totalDistance = 0;
+
+        fetch('/img.json')
+            .then(response => response.json())
+            .then(data => {
+                verificationImageDiv.style.backgroundImage = `url(${data.verificationImage})`;
+                slider.style.backgroundImage = `url(${data.sliderImage})`;
+            })
+            .catch(error => {
+                console.error('获取图片数据失败:', error);
+            });
+
+        slider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - slider.offsetLeft;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                let x = e.clientX - startX;
+                if (x < 0) x = 0;
+                if (x > 494) x = 494; // 544 - 50 (slider width)
+                slider.style.left = x + 'px';
+                totalDistance = x;
+                distanceDisplay.textContent = totalDistance;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                console.log('用户滑动的总距离:', totalDistance);
+                submitDistance(totalDistance);
+            }
+        });
+
+        function submitDistance(distance) {
+            const jsonData = JSON.stringify({ x: distance });
+            const encryptedData = jsonData;
+            fetch('/resolve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: encryptedData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('服务器响应:', data);
+                window.close();
+            })
+            .catch(error => {
+                alert('提交失败:', error);
+            });
+        }
+
+
+    </script>
+</body>
+</html>

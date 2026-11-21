@@ -1,0 +1,24 @@
+[versions]
+jackson = "2.18.3"
+netty = "4.1.115.Final"
+junit = "5.12.2"
+compress = "1.28.0"
+xz = "1.10"
+jna = "5.17.0"
+onnxruntime = "1.22.0"
+
+[libraries]
+jackson = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+netty-codec = { module = "io.netty:netty-codec", version.ref = "netty" }
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+netty-proxy = { module = "io.netty:netty-handler-proxy", version.ref = "netty" }
+
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "compress" }
+xz = { module = "org.tukaani:xz", version.ref = "xz" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
+
+onnxruntime = { module = "com.microsoft.onnxruntime:onnxruntime", version.ref = "onnxruntime" }
+
+netty-http = { module = "io.netty:netty-codec-http", version.ref = "netty" }

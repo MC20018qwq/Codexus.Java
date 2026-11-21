@@ -1,0 +1,25 @@
+.gradle/
+**/build/
+.idea/
+*.iml
+__pycache__/
+**/bin/
+**/obj/
+
+# Local runtime data and account credentials
+/.game_cache/
+/.ug_cache
+/*.cds
+/users.json
+/nexus-user.json
+/settings.json
+/plugins/
+/resources/
+/logs/
+*.log
+
+# Documentation and migration research stay local
+*.[mM][dD]
+/docs/
+/tools/
+**/src/test/

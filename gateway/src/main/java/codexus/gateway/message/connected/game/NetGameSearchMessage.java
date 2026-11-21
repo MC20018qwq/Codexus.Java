@@ -1,0 +1,40 @@
+package codexus.gateway.message.connected.game;
+
+import codexus.csharpsup.*;
+import codexus.gateway.connection.*;
+import codexus.gateway.handler.ClientHandler;
+import codexus.gateway.message.*;
+import codexus.gateway.manager.*;
+import codexus.gateway.entities.Entity;
+import codexus.gateway.entities.EntityResponse;
+import codexus.gateway.entities.web.*;
+import codexus.gateway.entities.web.gateway.*;
+import codexus.gateway.entities.web.netgame.*;
+import codexus.gateway.entities.web.rentalgame.*;
+import codexus.gateway.entities.web.role.*;
+import codexus.gateway.entities.web.javaedition.skins.*;
+import codexus.gateway.enums.Platform;
+import codexus.cipher.protocol.*;
+import codexus.cipher.entities.Entities;
+import codexus.cipher.entities.wpflauncher.netgame.*;
+import codexus.cipher.entities.wpflauncher.netgame.skin.*;
+import codexus.game.launcher.utils.*;
+import codexus.game.launcher.services.java.*;
+import codexus.interceptors.Interceptor;
+import java.nio.file.*;
+import java.util.*;
+import static codexus.gateway.handler.ClientHandler.send;
+
+@RegisterMessage(state = ConnectionState.Connected, type = "net_games_search")
+public final class NetGameSearchMessage extends RawMessage {
+    @Override public void handleMessage(ClientHandler handler, SecureConnection connection) {
+        var user = handler.getUsers().getLastAvailableUser();
+        if (user == null) { send(connection, "error_notification_rb", "请先登录网易账户"); return; }
+        var games = handler.getX19().queryNetGameWithKeyword(user.UserId, user.AccessToken, payload); if (games == null) return;
+        if (games.Data.length != 0) {
+            var details = handler.getX19().queryNetGameItemByIds(user.UserId, user.AccessToken, Arrays.stream(games.Data).map(game -> game.EntityId).toArray(String[]::new));
+            for (int i = 0; i < games.Data.length; i++) games.Data[i].TitleImageUrl = details.Data[i].TitleImageUrl;
+        }
+        send(connection, "net_games_search", DotNetJson.serialize(games));
+    }
+}

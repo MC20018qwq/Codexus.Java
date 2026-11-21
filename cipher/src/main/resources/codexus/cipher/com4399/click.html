@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击文字验证</title>
+    <style>
+        #image-container {
+            position: relative;
+            width: 544px;
+            height: 306px;
+            overflow: hidden;
+        }
+        #target-image {
+            width: 100%;
+            height: 100%;
+        }
+        #clickable-text {
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .click-dot {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: rgba(255,0,0,0.7);
+            border-radius: 50%;
+            border: 2px solid #fff;
+            pointer-events: auto;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 12px;
+            font-weight: bold;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="image-container">
+    <img id="target-image" src="" alt="验证图片">
+</div>
+<div id="clickable-text"></div>
+
+<script>
+    const targetImage = document.getElementById('target-image');
+    const clickableText = document.getElementById('clickable-text');
+    const imageContainer = document.getElementById('image-container');
+    let clicks = [];
+    let maxClicks = 4;
+    const width = 544;
+    const height = 306;
+
+    fetch('/img.json')
+        .then(response => response.json())
+        .then(data => {
+            targetImage.src = data.img;
+            clickableText.innerText = `请点击以下文字：${data.text}`;
+            maxClicks = data.text.split(',').length;
+        })
+        .catch(error => console.error('获取图片和文字失败:', error));
+
+    function renderDots() {
+        document.querySelectorAll('.click-dot').forEach(dot => dot.remove());
+        clicks.forEach((pt, idx) => {
+            const dot = document.createElement('div');
+            dot.className = 'click-dot';
+            dot.style.left = `${pt.x}px`;
+            dot.style.top = `${pt.y}px`;
+            dot.textContent = idx + 1;
+            dot.dataset.idx = idx;
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                clicks = clicks.slice(0, idx);
+                renderDots();
+            });
+            imageContainer.appendChild(dot);
+        });
+    }
+
+    targetImage.addEventListener('click', (event) => {
+        if (clicks.length < maxClicks) {
+            const rect = targetImage.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            clicks.push({ x: x, y: y });
+            renderDots();
+
+            if (clicks.length === maxClicks) {
+                submitData();
+            }
+        }
+    });
+
+    function submitData() {
+        const data = {
+            w: width,
+            h: height,
+            c: clicks
+        };
+
+        fetch('/resolve', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ data: JSON.stringify(data) })
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('数据提交成功');
+                window.close();
+            } else {
+                alert('数据提交失败');
+            }
+        })
+        .catch(error => {
+            alert('提交数据时发生错误:', error);
+        });
+    }
+</script>
+
+</body>
+</html>
