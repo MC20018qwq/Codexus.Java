@@ -18,3 +18,6 @@ subprojects {
         jvmArgs("--enable-native-access=ALL-UNNAMED")
     }
 }
+
+// The application targets Windows x64; keep the native OCR dependency platform-specific.
+apply(from = "gradle/onnxruntime-windows.gradle.kts")
