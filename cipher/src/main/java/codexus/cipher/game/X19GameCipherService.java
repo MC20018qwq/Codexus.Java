@@ -50,6 +50,7 @@ public final class X19GameCipherService {
     private final java.time.Clock clock;
     private final PublicKey authenticationPublicKey;
     private final GameArtifactResolver artifactResolver;
+    private final boolean dynamicDownload;
 
     public X19GameCipherService() {
         this(WPFLauncher.getLatestVersionAsync().join());
@@ -72,11 +73,20 @@ public final class X19GameCipherService {
         this(launcherVersion, crcSalt, clock, AUTH_SERVER_PUBLIC_KEY, new GameArtifactResolver(minecraftDirectory));
     }
 
+    X19GameCipherService(String launcherVersion, String crcSalt, java.time.Clock clock, Path minecraftDirectory, boolean dynamicDownload) {
+        this(launcherVersion, crcSalt, clock, AUTH_SERVER_PUBLIC_KEY, new GameArtifactResolver(minecraftDirectory), dynamicDownload);
+    }
+
     X19GameCipherService(String launcherVersion, String crcSalt, java.time.Clock clock, PublicKey authenticationPublicKey) {
         this(launcherVersion, crcSalt, clock, authenticationPublicKey, new GameArtifactResolver(GameArtifactResolver.defaultMinecraftDirectory()));
     }
 
     private X19GameCipherService(String launcherVersion, String crcSalt, java.time.Clock clock, PublicKey authenticationPublicKey, GameArtifactResolver artifactResolver) {
+        this(launcherVersion, crcSalt, clock, authenticationPublicKey, artifactResolver, GameAuthenticationMd5.DYNAMIC_DOWNLOAD);
+    }
+
+    private X19GameCipherService(String launcherVersion, String crcSalt, java.time.Clock clock, PublicKey authenticationPublicKey, GameArtifactResolver artifactResolver, boolean dynamicDownload) {
+        this.dynamicDownload = dynamicDownload;
         this.artifactResolver = java.util.Objects.requireNonNull(artifactResolver, "artifactResolver");
         this.authenticationPublicKey = java.util.Objects.requireNonNull(authenticationPublicKey, "authenticationPublicKey");
         this.launcherVersion = requireText(launcherVersion, "X19 launcher version");
@@ -100,7 +110,7 @@ public final class X19GameCipherService {
         }
 
         String checkedVersion = requireText(gameVersion, "gameVersion");
-        var md5 = artifactResolver.resolve(checkedVersion);
+        var md5 = GameAuthenticationMd5.resolve(checkedVersion, artifactResolver, dynamicDownload);
 
         String checkedModInfo = requireText(modInfo, "modInfo");
         String checkedServerId = requireText(serverId, "serverId");

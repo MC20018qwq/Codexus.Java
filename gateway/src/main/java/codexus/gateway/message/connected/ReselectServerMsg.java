@@ -37,7 +37,7 @@ public final class ReselectServerMsg extends JsonMessage<EntityReselectServer> {
         if (user == null) { send(connection, "error_notification_rb", "请先登录网易账户"); return; }
         var version = codexus.cipher.utils.GameVersionConverter.convert(request.GameVersionId);
         var api = handler.getX19();
-        InstallerService.prepareAuthenticationFiles(user.UserId, user.AccessToken, api, version).join();
+        InstallerService.prepareAuthentication(user.UserId, user.AccessToken, api, version).join();
         String mods = DotNetJson.serialize(InstallerService.installGameMods(user.UserId, user.AccessToken, version, api, request.GameId, false).join());
         interceptor.changeServer(request.GameName, request.GameId, GameVersionUtil.getGameVersionFromEnum(version), mods, request.Address, request.Port);
         send(connection, "java_edition/session/reselect_server", "");

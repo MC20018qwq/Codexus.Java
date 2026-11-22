@@ -11,7 +11,7 @@ public final class JreService {
     private static final System.Logger LOG = System.getLogger(JreService.class.getName());
     private static final URI JAVA_CDN = URI.create("https://x19.gdl.netease.com/");
     private static boolean is64Bit() {
-        return System.getProperty("os.arch").contains("64") || System.getenv("PROCESSOR_ARCHITEW6432") != null;
+        return System.getProperty("os.arch").contains("64");
     }
     /** Prepare all runtimes supported by this OS, matching the launcher's Java repair action. */
     public static CompletableFuture<Boolean> prepareJavaRuntime() {

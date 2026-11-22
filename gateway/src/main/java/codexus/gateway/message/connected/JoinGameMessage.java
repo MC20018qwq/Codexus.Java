@@ -28,7 +28,7 @@ public final class JoinGameMessage extends JsonMessage<EntityJoinGame> {
             boolean rental = request.VersionId == RentalVersionId;
             var version = rental ? GameVersionUtil.getEnumFromGameVersion(request.Version) : GameVersionConverter.convert(request.VersionId);
             var api = handler.getX19();
-            InstallerService.prepareAuthenticationFiles(user.UserId, user.AccessToken, api, version).join();
+            InstallerService.prepareAuthentication(user.UserId, user.AccessToken, api, version).join();
             String serverVersion = GameVersionUtil.getGameVersionFromEnum(version);
             String mods = DotNetJson.serialize(InstallerService.installGameMods(user.UserId, user.AccessToken, version, api, request.GameId, rental).join());
             TokenManager.Instance.updateToken(request.NexusId, request.NexusToken);

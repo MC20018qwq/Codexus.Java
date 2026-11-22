@@ -35,11 +35,17 @@ public final class GatewayRuntime implements AutoCloseable {
         Files.createDirectories(Path.of(PathUtil.CustomModsPath)); Files.createDirectories(Path.of(PathUtil.SkinsPath));
         UserManager.Instance.readUsersFromDisk();
         Interceptor.ensureLoaded(); PacketManager.Instance.ensureRegistered();
+        try {
         PluginManager.Instance.ensureUninstall(); PluginManager.Instance.loadPlugins("plugins");
         GameManager.Instance.registerActions();
         var handler = new ClientHandler();
         return new GatewayRuntime(UserManager.Instance, handler, Path.of(PathUtil.WebSitePath), Path.of(PathUtil.SkinsPath),
                 Path.of(PathUtil.BasePath, "web_settings.json"), 3550, 19541, listenAll);
+        } catch (IOException | RuntimeException | Error error) {
+            PluginManager.Instance.close();
+            UserManager.Instance.close();
+            throw error;
+        }
     }
     public int getWebSocketPort() { return websocket.getPort(); }
     public int getHttpPort() { return website.getPort(); }

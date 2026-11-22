@@ -192,6 +192,14 @@ public class PluginManager implements AutoCloseable {
         }
     }
     @Override public synchronized void close() {
+        var shutdownOrder = new ArrayList<>(Plugins.values());
+        Collections.reverse(shutdownOrder);
+        for (var state : shutdownOrder) {
+            if (state.Plugin instanceof AutoCloseable closeable) {
+                try { closeable.close(); }
+                catch (Exception error) { LOG.log(System.Logger.Level.WARNING, "Failed to close plugin " + state.Id, error); }
+            }
+        }
         for (var loader : classLoaders) {
             try { loader.close(); }
             catch (IOException e) { LOG.log(System.Logger.Level.WARNING, "Failed to close plugin class loader", e); }

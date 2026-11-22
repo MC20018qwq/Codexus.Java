@@ -7,6 +7,7 @@ import codexus.cipher.entities.wpflauncher.netgame.mods.*;
 import codexus.cipher.entities.wpflauncher.netgame.texture.*;
 import codexus.cipher.protocol.WPFLauncher;
 import codexus.cipher.game.GameArtifactResolver;
+import codexus.cipher.game.GameAuthenticationMd5;
 import codexus.csharpsup.DotNetJson;
 import codexus.game.launcher.utils.*;
 import codexus.game.launcher.utils.progress.SyncProgressBarUtil.ProgressBar;
@@ -33,6 +34,24 @@ public final class InstallerService {
             }
         });
     }
+    /** Prepares only the authentication inputs selected by the shared MD5 switch. */
+    public static CompletableFuture<Void> prepareAuthentication(String userId, String userToken, WPFLauncher wpf, EnumGameVersion gameVersion) {
+        return prepareAuthentication(userId, userToken, wpf, gameVersion, GameAuthenticationMd5.DYNAMIC_DOWNLOAD);
+    }
+
+    static CompletableFuture<Void> prepareAuthentication(String userId, String userToken, WPFLauncher wpf, EnumGameVersion gameVersion, boolean dynamicDownload) {
+        if (dynamicDownload) {
+            return prepareAuthenticationFiles(userId, userToken, wpf, gameVersion).thenApply(files -> null);
+        }
+        try {
+            // No package API, filesystem hashing, or downloads in hardcoded mode.
+            GameAuthenticationMd5.hardcoded(GameVersionUtil.getGameVersionFromEnum(gameVersion));
+            return CompletableFuture.completedFuture(null);
+        } catch (RuntimeException error) {
+            return CompletableFuture.failedFuture(error);
+        }
+    }
+
     /** Proxy authentication needs the version data and modified loader, but no Java runtime or shared game assets. */
     public static CompletableFuture<GameArtifactResolver.GameArtifacts> prepareAuthenticationFiles(String userId, String userToken, WPFLauncher wpf, EnumGameVersion gameVersion) {
         return async(() -> {
