@@ -4,10 +4,10 @@ import codexus.development.sdk.connection.GameConnection;
 import codexus.development.sdk.enums.*;
 import codexus.development.sdk.packet.*;
 import io.netty.buffer.ByteBuf;
-import codexus.base1206.plugin.utils.nbt.*;
+import codexus.base12111.plugin.utils.nbt.*;
 import static codexus.development.sdk.extensions.NettyExtensions.*;
 import codexus.heypixel.plugin.HeypixelProtocolPlugin;
-@RegisterPacket(state=EnumConnectionState.Play,direction=EnumPacketDirection.ClientBound,packetIds=0x60,versions=EnumProtocolVersion.V1206,append=true)
+@RegisterPacket(state=EnumConnectionState.Play,direction=EnumPacketDirection.ClientBound,packetIds=0x6B,versions=EnumProtocolVersion.V12111,append=true)
 public final class ClientboundSetPlayerTeamFixPacket implements IPacket {
     private int mode;
     public EnumProtocolVersion ClientProtocolVersion = EnumProtocolVersion.None;

@@ -7,7 +7,7 @@ import codexus.heypixel.plugin.anticheat.*;
 import codexus.heypixel.plugin.models.*;
 import codexus.heypixel.plugin.networking.*;
 import static codexus.heypixel.plugin.networking.MessagePackBufferExtensions.*;
-import codexus.base1206.plugin.utils.*;
+import codexus.base12111.plugin.utils.*;
 public final class PlayerEntityInteractionMessage implements IAntiCheatMessage {
     public final Player Player; public final Entity Entity;
     public PlayerEntityInteractionMessage(Player player,Entity entity){Player=player;Entity=entity;}

@@ -43,7 +43,14 @@ public final class ClientFingerprintBuilder {
         files.sort(Comparator.comparing(p->p.getFileName().toString()));return files.stream().map(this::buildEncryptedModFileFingerprint).toArray(EncryptedFileFingerprint[]::new);
     }
     private EncryptedFileFingerprint buildEncryptedModFileFingerprint(Path file){try{String name=file.getFileName().toString(),hash=HashExtensions.sha1Hex(Files.readAllBytes(file));patchKnownMod(file,name,hash);return new EncryptedFileFingerprint(cipher.encryptString(REPORTED_MODS+"\\"+name),cipher.encryptString(hash));}catch(IOException e){throw new UncheckedIOException(e);}}
-    private void patchKnownMod(Path file,String name,String hash){String toml=ModArchiveMetadataReader.readModsToml(file.toString());if(toml==null)return;String id=ModArchiveMetadataReader.parseModId(toml);if(id==null)return;for(var mod:knownMods)if(mod.ModName.equals(id)){mod.ModPath=ModArchiveMetadataReader.replaceFileName(mod.ModPath,name);mod.ModHash=hash;return;}}
+    private void patchKnownMod(Path file,String name,String hash){
+        String toml=ModArchiveMetadataReader.readModsToml(file.toString());
+        for(String id:ModArchiveMetadataReader.parseModIds(toml)){
+            KnownModDescriptor descriptor=knownMods.stream().filter(mod->mod.ModName.equals(id)).findFirst().orElse(null);
+            if(descriptor==null)knownMods.add(new KnownModDescriptor(id,REPORTED_MODS+"\\"+name,hash));
+            else{descriptor.ModPath=REPORTED_MODS+"\\"+name;descriptor.ModHash=hash;}
+        }
+    }
     private String[] generateAccountDirectories(){List<String> values=new ArrayList<>();for(int i=0;i<random.next(1,3);i++){String account=RandomIdentityGenerator.generateDigits(random,random.next(12,17))+"@163.com";values.add(Base64.getEncoder().encodeToString(DotNetEncoding.utf8("Game\\"+account)));}return values.toArray(String[]::new);}
     private String[][] generateDiskDriveInfo(){String serial=RandomIdentityGenerator.generateHex(random,2)+"_"+RandomIdentityGenerator.generateHex(random,2)+"_"+RandomIdentityGenerator.generateHex(random,2)+"_"+RandomIdentityGenerator.generateHex(random,2)+".";return new String[][]{{serial.toUpperCase(Locale.ROOT),"\\\\.\\PHYSICALDRIVE0",SyntheticFingerprintData.StorageDeviceModels.get(random.next(SyntheticFingerprintData.StorageDeviceModels.size()))}};}
     private String[][] generateNetworkAdapterInfo(){int count=random.next(1,4);List<String> names=new ArrayList<>(SyntheticFingerprintData.NetworkAdapterNames);ListShuffleExtensions.shuffle(names,random);String[][] pairs=new String[count][2];for(int i=0;i<count;i++){pairs[i][0]=names.get(i);pairs[i][1]=RandomIdentityGenerator.generateMacAddress(random,6);}ListShuffleExtensions.shuffle(names,random);String[][] result=new String[count][];for(int i=0;i<count;i++)result[i]=new String[]{"etc"+(i+1),pairs[i][0],pairs[i][1],"["+RandomIdentityGenerator.generatePrivateIpv4Address(random)+"]","[fe80:0:0:0:"+RandomIdentityGenerator.generateIpv6InterfaceIdentifier(random)+"]"};return result;}

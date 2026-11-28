@@ -3,23 +3,27 @@ package codexus.heypixel.plugin.models;
 import java.util.*;
 public final class KnownModCatalog {
     private KnownModCatalog(){}
+    // SHA-1 of the supplied NetEase 1.21.11 / NeoForge 21.11.45 client archives.
+    // These are archive fingerprints, not proof that a server accepted its private challenges.
     private static final List<KnownModDescriptor> templates=List.of(
-        new KnownModDescriptor("minecraft","E:\\MCLDownload\\Game\\.minecraft\\libraries\\net\\minecraft\\client\\1.20.1-20230612.114412\\client-1.20.1-20230612.114412-srg.jar","3c8aa19b710a3a68f721210eb69b74594d13e218"),
-        new KnownModDescriptor("saturn","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660717756909@2@8.jar","4c5826a73bdbc052db2fe080c582e59ae8ed227d"),
-        new KnownModDescriptor("viaforge","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660735087753@2@8.jar","9df7487be88cc018ab295618c1f88a0a4886608f"),
-        new KnownModDescriptor("geckolib","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660633006665@2@8.jar","040e42eb566a764792ba0c77e39a56f020cabb8c"),
-        new KnownModDescriptor("heypixel","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660643769709@2@8.jar","e66b8fba3b1a772885244eaf2dacd2e9b241d79f"),
-        new KnownModDescriptor("entityculling","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660614912528@2@8.jar","09c17c8794a0e00d2ccb51b8d7c1b812498c5c33"),
-        new KnownModDescriptor("mixinextras","","5c35573a7b76103724799ca1174a69699b8a9aec"),
-        new KnownModDescriptor("netease_official","E:\\MCLDownload\\Game\\.minecraft\\mods\\4681704866889354274@3@0.jar","a9c7c9e3ff02a30f1920b65ee85af9c5e7c25a45"),
-        new KnownModDescriptor("waveycapes","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660750230557@2@8.jar","c838d45bd4bb53ed66d66ed3cf3822a7ebd7ba09"),
-        new KnownModDescriptor("ferritecore","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660623916601@2@8.jar","417fb6ce8f52abf40bd9d0390371790f9576f8ba"),
-        new KnownModDescriptor("embeddium_extra","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660708237753@2@8.jar","bb422d5626bf69841e444a3e545c8e71b6928cf8"),
-        new KnownModDescriptor("cloth_config","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660593985565@2@8.jar","c65d07748acc57ceb45d53b3964368b84f34d54f"),
-        new KnownModDescriptor("forge","E:\\MCLDownload\\Game\\.minecraft\\libraries\\net\\minecraftforge\\forge\\1.20.1-47.3.0\\forge-1.20.1-47.3.0-universal.jar","7aeb6f58286b5398dc7dfa1d3db1757e601145c1"),
-        new KnownModDescriptor("embeddium","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660604590690@2@8.jar","b772ec4f03fbe9b218e9f28d9441ea0a5724d5cf"),
-        new KnownModDescriptor("oculus","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660697310016@2@8.jar","27410903d3af950378776106b76503cfebe7ea3a"),
-        new KnownModDescriptor("imblocker","E:\\MCLDownload\\Game\\.minecraft\\mods\\4685717660687660960@2@8.jar","65c67fd0c62ad2198902f451bed1f02a5fd15aa5")
+        new KnownModDescriptor("minecraft","E:\\MCLDownload\\Game\\.minecraft\\versions\\1.21.11\\1.21.11.jar","ba2df812c2d12e0219c489c4cd9a5e1f0760f5bd"),
+        new KnownModDescriptor("neoforge","E:\\MCLDownload\\Game\\.minecraft\\libraries\\net\\neoforged\\neoforge\\21.11.45\\neoforge-21.11.45-universal.jar","6d092491d8297ee97d936256a0bbd7ce1685a6af"),
+        new KnownModDescriptor("netease_official","E:\\MCLDownload\\Game\\.minecraft\\mods\\4691455658582475773@3@0.jar","40d7d645d49da50517e9d41bb6395ad655e2491f"),
+        new KnownModDescriptor("cloth_config","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283409555448@2@8.jar","e9cb40c59491f8e4c5a87866f152432dfb17642e"),
+        new KnownModDescriptor("entityculling","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283419838303@2@8.jar","3701f76db4db78f2dcb57656a2f17b71d7e8c923"),
+        new KnownModDescriptor("ferritecore","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283431013280@2@8.jar","900f0f673fef88784711ee952cbf1fe8be2480bd"),
+        new KnownModDescriptor("geckolib","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283440973905@2@8.jar","8204b7699118444517efbda4bdb3c1a3f705000c"),
+        new KnownModDescriptor("heypixel","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283451864950@2@8.jar","0f53c5654c789f36f8ea3f83d10cb4c138b59108"),
+        new KnownModDescriptor("citresewn","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283451864950@2@8.jar","0f53c5654c789f36f8ea3f83d10cb4c138b59108"),
+        new KnownModDescriptor("citresewn_defaults","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283451864950@2@8.jar","0f53c5654c789f36f8ea3f83d10cb4c138b59108"),
+        new KnownModDescriptor("imblocker","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283528168710@2@8.jar","d3785bc697fdbefddb346f2b1c2200ab56745214"),
+        new KnownModDescriptor("iris","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283537562588@2@8.jar","c9a291081c4fba35397e1b30d9b77fc2bffc198c"),
+        new KnownModDescriptor("noloadingscreen","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283549425614@2@8.jar","9f24b1464dacc5f61323d2f53e8b1c71f9689407"),
+        new KnownModDescriptor("sodium_extra","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283559764813@2@8.jar","93f47a4aa1937c249b6a2b03b9e2b7a836cb2f7c"),
+        new KnownModDescriptor("sodium","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283569654467@2@8.jar","de0cd8d51567dc64ccce584ab43e59db6116679e"),
+        new KnownModDescriptor("spark","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283580387760@2@8.jar","03112df0197900418b5ff9fcd0947dda94b9e07c"),
+        new KnownModDescriptor("tacz","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283593813137@2@8.jar","943123661b3cb59182caa8f99cb51befc6c5db8d"),
+        new KnownModDescriptor("waveycapes","E:\\MCLDownload\\Game\\.minecraft\\mods\\4692146283608481695@2@8.jar","fffb04e32dfda2a980778c3e78304c9aa4ff27f1")
     );
     /** Each session patches its own descriptors; concurrent users cannot overwrite each other. */
     public static List<KnownModDescriptor> getKnownMods(){return new ArrayList<>(templates.stream().map(KnownModDescriptor::copy).toList());}

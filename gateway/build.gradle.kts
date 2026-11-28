@@ -48,14 +48,19 @@ tasks.startScripts {
 tasks.test { dependsOn(tasks.installDist) }
 
 // Bundled Java plugins stay in plugins/ and are loaded by the SDK dependency loader.
-val bundledJavaPlugins = listOf(":plugin-base1206", ":plugin-heypixel")
+val bundledJavaPlugins = listOf(":plugin-base12111", ":plugin-heypixel")
 distributions.main {
     contents {
         bundledJavaPlugins.forEach { from(project(it).tasks.named("jar")) { into("plugins") } }
     }
 }
-val prepareGatewayPlugins = tasks.register<Copy>("prepareGatewayPlugins") {
+val prepareGatewayPlugins = tasks.register<Sync>("prepareGatewayPlugins") {
     bundledJavaPlugins.forEach { from(project(it).tasks.named("jar")) }
     into(layout.buildDirectory.dir("run/plugins"))
+    // Replace bundled versions without deleting users' other development plugins.
+    preserve {
+        include("**")
+        exclude("Codexus.Base1206.Plugin-*.jar", "Codexus.Base12111.Plugin-*.jar", "Codexus.Heypixel.Plugin-*.jar")
+    }
 }
 tasks.named<JavaExec>("run") { dependsOn(prepareGatewayPlugins) }

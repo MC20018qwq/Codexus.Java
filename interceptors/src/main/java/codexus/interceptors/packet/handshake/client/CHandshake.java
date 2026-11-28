@@ -37,9 +37,17 @@ public class CHandshake implements IPacket {
         connection.setProtocolVersionValue(ProtocolVersion);
         connection.setStateValue(NextState);
         ServerPort = connection.ForwardPort & 0xffff;
-        String suffix = ProtocolVersion <= EnumProtocolVersion.V1122.value() ? "\0FML\0"
-                : ProtocolVersion <= EnumProtocolVersion.V1180.value() ? "\0FML2\0"
-                : ProtocolVersion <= EnumProtocolVersion.V1206.value() ? "\0FML3\0" : "\0FORGE";
+        String suffix;
+        if (ProtocolVersion == EnumProtocolVersion.V12111.value()) {
+            // Native NeoForge negotiates in Configuration. Preserve any client-supplied
+            // handshake suffix instead of fabricating the old Forge marker.
+            int separator = ServerAddress.indexOf('\0');
+            suffix = separator < 0 ? "" : ServerAddress.substring(separator);
+        } else {
+            suffix = ProtocolVersion <= EnumProtocolVersion.V1122.value() ? "\0FML\0"
+                    : ProtocolVersion <= EnumProtocolVersion.V1180.value() ? "\0FML2\0"
+                    : ProtocolVersion <= EnumProtocolVersion.V1206.value() ? "\0FML3\0" : "\0FORGE";
+        }
         ServerAddress = connection.ForwardAddress + suffix;
         System.getLogger(getClass().getName()).log(System.Logger.Level.INFO,
                 "Protocol version: {0}, next state: {1}, address: {2}",

@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":plugin-base1206"))
+    api(project(":plugin-base12111"))
     implementation(project(":interceptors"))
     implementation(project(":game-launcher"))
     testImplementation(platform(libs.junit.bom))
@@ -7,7 +7,7 @@ dependencies {
     testRuntimeOnly(libs.junit.launcher)
 }
 
-version = "2.3.3"
+version = "3.0.0"
 tasks.jar { archiveBaseName.set("Codexus.Heypixel.Plugin") }
 
 tasks.processTestResources {
