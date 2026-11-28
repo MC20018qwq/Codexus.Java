@@ -13,6 +13,7 @@ import java.util.zip.ZipFile;
 public final class GameArtifactResolver {
     private static final String LEGACY_LAUNCHER = "net/minecraft/launchwrapper/Launch.class";
     private static final String MODERN_LAUNCHER = "cpw/mods/modlauncher/Launcher.class";
+    private static final String NEOFORGE_LAUNCHER = "net/neoforged/fml/startup/Client.class";
     private final Path minecraft;
     private final ObjectMapper mapper = new ObjectMapper().enable(JsonParser.Feature.ALLOW_TRAILING_COMMA);
 
@@ -36,7 +37,12 @@ public final class GameArtifactResolver {
             var configurations = new ArrayList<JsonNode>();
             collectConfigurations(version, configurations, new HashSet<>());
             String mainClass = configurations.stream().map(cfg -> cfg.path("mainClass").asText("")).filter(value -> !value.isEmpty()).findFirst().orElse("");
-            String launcherClass = mainClass.equals("net.minecraft.launchwrapper.Launch") ? LEGACY_LAUNCHER : MODERN_LAUNCHER;
+            // New NeoForge launches from FML itself; it no longer contains ModLauncher.
+            String launcherClass = switch (mainClass) {
+                case "net.minecraft.launchwrapper.Launch" -> LEGACY_LAUNCHER;
+                case "net.neoforged.fml.startup.Client" -> NEOFORGE_LAUNCHER;
+                default -> MODERN_LAUNCHER;
+            };
             var runtime = runtimeJars(configurations, version); var libraries = new LinkedHashSet<Path>();
             var libraryNames = new HashSet<String>();
             for (JsonNode cfg : configurations) collectLibraryPaths(cfg, libraries, libraryNames);

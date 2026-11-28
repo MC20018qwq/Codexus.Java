@@ -11,7 +11,7 @@ public final class GameAuthenticationMd5 {
 
     public record Md5Pair(String bootstrapMd5, String datFileMd5) { }
 
-    // Restored verbatim from Codexus_Server; keys are NetEase versions, not protocol aliases.
+    // Original entries are from Codexus_Server; additions are verified against installed NetEase files.
     private static final Map<String, Md5Pair> GAME_MD5 = Map.of(
             "1.7.10", new Md5Pair("A895FE657915D58F55919CEACD30209D", "538D33D5F35EF01736EDA30F94C61DF6"),
             "1.8.9", new Md5Pair("A895FE657915D58F55919CEACD30209D", "0CF2074AA7D4B543E35A3D6BB57AF861"),
@@ -21,7 +21,8 @@ public final class GameAuthenticationMd5 {
             "1.20", new Md5Pair("2A7A476411A1687A56DC6848829C1AE4", "D285CBF97D9BA30D3C445DBF1C342634"),
             "1.21", new Md5Pair("684528BF492A84489F825F5599B3E1C6", "574033E7E4841D8AC4C14D7FA5E05337"),
             "1.21.8", new Md5Pair("F52CA72E6BCD8D06AAE0A60B81A4C890", "C9906B5809A92C73299279E562A78D81"),
-            "1.21.10", new Md5Pair("21A3B8D834A241CB4E3C24A263E35FE7", "CD016E8A0D1930A71E4D58D23C06022A"));
+            "1.21.10", new Md5Pair("21A3B8D834A241CB4E3C24A263E35FE7", "CD016E8A0D1930A71E4D58D23C06022A"),
+            "1.21.11", new Md5Pair("A27720583FD92E032346BBE07DDDE58C", "AEEA6416F00E6ECDE4B21FAB15882043"));
 
     public static Md5Pair hardcoded(String version) {
         Md5Pair hashes = version == null ? null : GAME_MD5.get(version);
